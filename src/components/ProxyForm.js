@@ -1,5 +1,7 @@
 
 import React, { Component } from 'react';
+import ServerOutput from './ServerOutput';
+import { onInputChange } from '../util';
 
 
 
@@ -15,14 +17,8 @@ export default class ProxyForm extends Component {
       proxyResponse: null
     };
 
-    this.onInputChange = this.onInputChange.bind(this);
+    this.onInputChange = onInputChange.bind(this);
     this.onProxySubmit = this.onProxySubmit.bind(this);
-  }
-
-//------
-
-  onInputChange(e) {
-    this.setState({[e.target.name]: e.target.value});
   }
 
 //------
@@ -87,45 +83,51 @@ export default class ProxyForm extends Component {
         onSubmit={this.onProxySubmit}
         className="form-proxy"
       >
-        <label htmlFor="proxyInput">
-          <span className="label-real">
-            API to Ping
-          </span>
-          <input
-            type="text"
-            id="proxyInput"
-            name="proxyInput"
-            onChange={this.onInputChange}
-            value={proxyInput}
-          />
-        </label>
-        <label htmlFor="proxyRequestType">
-          <span className="label-real">
-            Request Type
-          </span>
-          <select
-            id="proxyRequestType"
-            name="proxyRequestType"
-            onChange={this.onInputChange}
-            value={proxyRequestType}
-          >
-            <option value="get">GET</option>
-            <option value="post">POST</option>
-          </select>
-        </label>
+        <div className="form-content">
+          <h2 className="form-title">
+            Ping an API
+          </h2>
+          <label className="form-group" htmlFor="proxyInput">
+            <span className="label-real">
+              Full URL to Ping
+            </span>
+            <input
+              type="text"
+              id="proxyInput"
+              name="proxyInput"
+              onChange={this.onInputChange}
+              value={proxyInput}
+              placeholder="e.g. https://www.google.com"
+            />
+          </label>
+          <label className="form-group" htmlFor="proxyRequestType">
+            <span className="label-real">
+              Request Type
+            </span>
+            <div className="select-wrapper">
+              <select
+                id="proxyRequestType"
+                name="proxyRequestType"
+                onChange={this.onInputChange}
+                value={proxyRequestType}
+              >
+                <option value="get">GET</option>
+                <option value="post">POST</option>
+              </select>
+              <span className="select-arrow"></span>
+            </div>
+          </label>
 
-        <button type="submit">
-          Send Request
-        </button>
-
-
-        <div className="proxy-response">
-          { proxyResponse ?
-              proxyResponse
-              :
-              <span className="no-resposne-yet">Type a url to make a request to. Try...</span>
-          }
+          <button type="submit">
+            Send Request
+          </button>
         </div>
+
+        <ServerOutput
+          placeholder="Submit a URL above to make a request."
+          output={proxyResponse}
+        />
+
       </form>
     )
   }

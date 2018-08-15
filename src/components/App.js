@@ -7,13 +7,14 @@ import ProxyForm from './ProxyForm';
 
 const App = (props) => {
   return (
-    <div>
+    <div className="app">
 
-      <h1>Change the World</h1>
+      <h1>API Testing</h1>
 
-      <ReverseForm />
-
-      <ProxyForm />
+      <div className="form-row">
+        <ReverseForm />
+        <ProxyForm />
+      </div>
 
     </div>
   )
