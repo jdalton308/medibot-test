@@ -31,6 +31,7 @@ npm run start-dev
 This is small React app being server from a node server using Express.
 
 **Client-Side**
+
 All the client-side code is in `/src/`. Here is a brief explanation of the main files and folders:
 ```
 - src/
@@ -48,6 +49,7 @@ All the client-side code is in `/src/`. Here is a brief explanation of the main 
 ```
 
 **Server-Side**
+
 As this is a simple server that responds to just two endpoints, the server is contained within `/index.js`, at the project root.
 
 The server either serves the `index.html`, or responds to the two specific api endpoints.
