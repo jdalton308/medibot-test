@@ -29,15 +29,15 @@ module.exports = {
           'css-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.html$/,
+        use: [
+          'file-loader?name=[name].[ext]',
+          'extract-loader',
+          'html-loader'
+        ]
       }
     ]
   },
-  // plugins: [
-  //   new MiniCssExtractPlugin({
-  //     // Options similar to the same options in webpackOptions.output
-  //     // both options are optional
-  //     filename: "[name].css",
-  //     chunkFilename: "[id].css"
-  //   })
-  // ]
 };
