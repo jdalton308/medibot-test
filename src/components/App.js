@@ -18,24 +18,43 @@ export default class App extends Component {
     };
 
     this.onInputChange = this.onInputChange.bind(this);
-  }
-
-//------
-
-  onProxySubmit(e) {
-
-  }
-
-//------
-
-  onReverseSubmit(e) {
-
+    this.onReverseSubmit = this.onReverseSubmit.bind(this);
+    this.onProxySubmit = this.onProxySubmit.bind(this);
   }
 
 //------
 
   onInputChange(e) {
-    this.setState([e.target.name]: e.target.value);
+    this.setState({[e.target.name]: e.target.value});
+  }
+
+//------
+
+  onReverseSubmit(e) {
+    e.preventDefault();
+    console.log('reverse submit: ', e);
+    console.log('reversing: ', this.state.reverseInput);
+
+    fetch('/api/reverse', {
+      method: 'POST',
+      body: this.state.reverseInput,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    }).then((res) => res.text())
+    .then((res) => {
+      console.log('res: ', res);
+      this.setState({reverseResponse: res});
+    })
+  }
+
+//------
+
+  onProxySubmit(e) {
+    e.preventDefault();
+    console.log('proxy submit: ', e);
+    console.log('fetching: ', this.state.proxyInput);
+    console.log('...as type: ', this.state.proxyRequestType);
   }
 
 //------
@@ -55,7 +74,7 @@ export default class App extends Component {
 
 {/* Reverse Form */}
         <form
-          action={onReverseSubmit()}
+          onSubmit={this.onReverseSubmit}
           className="form-reverse"
         >
           <label htmlFor="reverseInput">
@@ -66,32 +85,30 @@ export default class App extends Component {
               type="text"
               id="reverseInput"
               name="reverseInput"
-              onChange={onInputChange(e)}
+              onChange={this.onInputChange}
               value={reverseInput}
             />
           </label>
 
-          <button
-            type="submit"
-          >
+          <button type="submit">
             Reverse
           </button>
-
-          <div className="reverse-response">
-            { reverseResponse ?
-                {reverseResponse}
-                :
-                <span className="no-resposne-yet">Submit a string to reverse it</span>
-            }
-          </div>
         </form>
+
+        <div className="reverse-response">
+          { reverseResponse ?
+              reverseResponse
+              :
+              <span className="no-resposne-yet">Submit a string to reverse it</span>
+          }
+        </div>
 
 {/* Proxy Form */}
         <form 
-          action={onProxySubmit()}
+          onSubmit={this.onProxySubmit}
           className="form-proxy"
         >
-          <label htmlFor="reverseInput">
+          <label htmlFor="proxyInput">
             <span className="label-real">
               API to Ping
             </span>
@@ -99,11 +116,37 @@ export default class App extends Component {
               type="text"
               id="proxyInput"
               name="proxyInput"
-              onChange={onInputChange(e)}
+              onChange={this.onInputChange}
               value={proxyInput}
             />
           </label>
+          <label htmlFor="proxyRequestType">
+            <span className="label-real">
+              Request Type
+            </span>
+            <select
+              id="proxyRequestType"
+              name="proxyRequestType"
+              onChange={this.onInputChange}
+              value={proxyRequestType}
+            >
+              <option value="get">GET</option>
+              <option value="post">POST</option>
+            </select>
+          </label>
+
+          <button type="submit">
+            Send Request
+          </button>
         </form>
+
+        <div className="proxy-response">
+          { proxyResponse ?
+              proxyResponse
+              :
+              <span className="no-resposne-yet">Type a url to make a request to. Try...</span>
+          }
+        </div>
 
       </div>
     )
