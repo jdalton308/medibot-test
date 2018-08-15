@@ -14,6 +14,7 @@ export default class App extends Component {
 
       proxyInput: '',
       proxyRequestType: 'get',
+      proxyError: null,
       proxyResponse: null
     };
 
@@ -32,8 +33,6 @@ export default class App extends Component {
 
   onReverseSubmit(e) {
     e.preventDefault();
-    console.log('reverse submit: ', e);
-    console.log('reversing: ', this.state.reverseInput);
 
     fetch('/api/reverse', {
       method: 'POST',
@@ -41,20 +40,41 @@ export default class App extends Component {
       headers: {
         'Content-Type': 'text/plain',
       },
-    }).then((res) => res.text())
-    .then((res) => {
-      console.log('res: ', res);
-      this.setState({reverseResponse: res});
     })
+      .then((res) => res.text())
+      .catch(error => console.error('Error:', error))
+      .then((res) => {
+        this.setState({reverseResponse: res});
+      });
   }
 
 //------
 
   onProxySubmit(e) {
     e.preventDefault();
-    console.log('proxy submit: ', e);
-    console.log('fetching: ', this.state.proxyInput);
-    console.log('...as type: ', this.state.proxyRequestType);
+
+    const {
+      proxyInput,
+      proxyRequestType
+    } = this.state;
+
+    fetch('/api/proxy', {
+      method: 'POST',
+      body: JSON.stringify({
+        url: proxyInput,
+        method: proxyRequestType
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.text())
+      .catch(error => {
+        this.setState({proxyError: error});
+      })
+      .then((res) => {
+        this.setState({proxyResponse: res});
+      });
   }
 
 //------

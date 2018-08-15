@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 // const path = require('path');
 const bodyParser = require('body-parser');
+const axios = require('axios');
 
 
 const webpack = require('webpack');
@@ -19,13 +20,34 @@ app.use(bodyParser.text());
 
 
 
-app.get('*', function(req, res) {
+app.get('*', (req, res) => {
   res.sendFile('dist/index.html', { root: __dirname });
 });
 
-app.post('/api/reverse', function(req, res) {
+
+app.post('/api/reverse', (req, res) => {
   const reversed = req.body.split('').reverse().join('');
   res.send(reversed);
+});
+
+
+app.post('/api/proxy', (req, res) => {
+  const {
+    url,
+    method
+  } = req.body;
+
+  axios({
+    url,
+    method
+  })
+    .then((body) => {
+      res.send(body.data);
+    })
+    .catch((error) => {
+      console.log('\n\nFull Error:\n\n', error);
+      res.status(500).send('Error making request to provided URL.');
+    });
 });
 
 
